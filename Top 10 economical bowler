@@ -1,0 +1,24 @@
+/* Top 10 Economical bowler*/
+-- Selecting total conceded runs and total balls of each bowler
+select bowler,
+sum(case when extras_type not in('byes','legbyes') then total_runs else 0 end) as run_conceded,
+count(case when extras_type not in('wides','noballs') then ball end) as total_balls
+from ipl_ball
+group by bowler;
+
+-- selecting top 10 economical bowler
+select a.*,round(a.run_conceded::decimal/a.total_balls*6,2)as economy from (
+select bowler,
+sum(case when extras_type not in('byes','legbyes') then total_runs else 0 end) as run_conceded,
+count(case when extras_type not in('wides','noballs') then ball end) as total_balls
+from ipl_ball
+group by bowler
+) as a
+where a.total_balls>500
+order by economy
+limit 10;
+
+
+
+
+ 

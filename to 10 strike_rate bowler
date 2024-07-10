@@ -1,0 +1,19 @@
+/* Top 10 bowler with best strike*/
+-- Selecting total balls and total wicket of every bowler
+select bowler, count(ball) as total_balls,
+sum(case when dismissal_kind not in('obstructing the field','retired hurt','run out') then is_wicket else 0 end) as total_wickets
+from ipl_ball
+group by bowler;
+
+-- Selecting top 10 with best strike rate
+select a.*,
+round(a.total_balls::decimal/a.total_wickets,2) as strike_rate
+from (
+select bowler, count(ball) as total_balls,
+sum(case when dismissal_kind not in('obstructing the field','retired hurt','run out') then is_wicket else 0 end) as total_wickets
+from ipl_ball
+group by bowler
+) as a
+where a.total_wickets!=0 and a.total_balls>500
+order by strike_rate
+limit 10;

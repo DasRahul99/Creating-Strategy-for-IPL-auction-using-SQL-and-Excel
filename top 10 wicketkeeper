@@ -1,0 +1,14 @@
+/* Top 10 wicketkeeper*/
+select a.batsman as keeper,a.strike_rate, b.total_stamp
+from 
+(select distinct batsman, sum(batsman_runs) as "Total Runs", count(ball) as "Total balls played", 
+round((cast(sum(batsman_runs)as decimal)/cast(count(ball)as decimal)*100),2) as strike_rate from ipl_ball
+where extras_type !='wides' 
+group by batsman) as a 
+join
+(select fielder , sum(is_wicket) as total_stamp from ipl_ball
+where dismissal_kind='stumped'
+group by fielder) as b 
+on a.batsman=b.fielder
+order by b.total_stamp desc ,a.strike_rate desc
+limit 10;

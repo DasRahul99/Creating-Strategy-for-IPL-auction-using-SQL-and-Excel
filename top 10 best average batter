@@ -1,0 +1,11 @@
+/* Top 10 batters with highest average played more than 2 seasons*/
+select distinct a.batsman , sum(a.batsman_runs) as "Total Runs", 
+sum(a.is_wicket) as "Total Outs",
+round((sum(a.batsman_runs)::decimal/sum(a.is_wicket)),2) as average,
+count(distinct(extract(year from b.date))) as "Total Seasons"
+from ipl_ball as a left join ipl_matches as b on a.id=b.id
+group by a.batsman
+having count(distinct(extract(year from b.date)))>2 and
+sum(a.batsman_runs)>1000 -- as scoring run is also important for an anchor so I added this condition
+order by average desc
+limit 10;

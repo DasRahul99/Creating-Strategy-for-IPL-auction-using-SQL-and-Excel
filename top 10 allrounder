@@ -1,0 +1,16 @@
+select a.batsman as all_rounder, a.strike_rate as "Batting Strike Rate",
+round(b.total_balls::decimal/b.total_wickets,2) as "Bowling Strike Rate"
+from
+(select distinct batsman, sum(batsman_runs) as "Total Runs", count(ball) as "Total balls played", 
+round((cast(sum(batsman_runs)as decimal)/cast(count(ball)as decimal)*100),2) as strike_rate from ipl_ball
+where extras_type !='wides' 
+group by batsman )as a 
+join
+(select bowler, count(ball) as total_balls,
+sum(case when dismissal_kind not in('obstructing the field','retired hurt','run out') then is_wicket else 0 end) as total_wickets
+from ipl_ball
+group by bowler) as b
+on a.batsman=b.bowler
+where a."Total balls played">500 and b.total_balls >300
+order by "Batting Strike Rate" desc,"Bowling Strike Rate" desc
+limit 10;

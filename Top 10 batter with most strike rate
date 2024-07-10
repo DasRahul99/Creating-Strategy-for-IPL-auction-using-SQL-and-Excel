@@ -1,0 +1,8 @@
+/* Creating list of top 10 batters with highest strike rate*/
+select distinct batsman, sum(batsman_runs) as "Total Runs", count(ball) as "Total balls played", 
+round((cast(sum(batsman_runs)as decimal)/cast(count(ball)as decimal)*100),2) as strike_rate from ipl_ball
+where extras_type !='wides' 
+group by batsman 
+having count(ball)>500
+order by strike_rate desc
+limit 10;

@@ -1,0 +1,17 @@
+/* Creating table ipl_ball and ipl_matches*/
+create table ipl_ball (
+id numeric, inning int, over int, ball int, batsman varchar, non_striker varchar, bowler varchar,
+batsman_runs int, extra_runs int, total_runs int, is_wicket int, dismissal_kind varchar, player_dismissed varchar,
+fielder varchar, extras_type varchar, batting_team varchar, bowling_team varchar
+);
+create table ipl_matches(
+id int, city varchar, date date, potm varchar, venue varchar, neutral_venue int, team1 varchar, team2 varchar,
+toss_winner varchar, toss_decision varchar, winner varchar, result varchar, result_margin int, eliminator varchar,
+method varchar, umpire1 varchar, umpire2 varchar
+);
+/* Inserting data into tables*/
+copy ipl_ball from '/lib/postgresql/16/Data/IPL Dataset/IPL_Ball.csv' csv header;
+select * from ipl_ball;
+copy ipl_matches from '/lib/postgresql/16/Data/IPL Dataset/IPL_matches.csv' csv header;
+select * from ipl_matches;
+

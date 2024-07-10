@@ -1,0 +1,11 @@
+/* Top 10 batter who have scored most runs in boundaries */
+select a.batsman,sum(a.batsman_runs) as "Total Runs", 
+sum(case when a.batsman_runs in (4, 6) then a.batsman_runs else 0 end) as "Total Boundary Runs",
+round(sum(case when a.batsman_runs in (4, 6) then a.batsman_runs else 0 end)::decimal /sum(a.batsman_runs)*100,2) as boundary_percentage,
+count(distinct(extract(year from b.date))) as "Total Seasons"
+from ipl_ball as a left join ipl_matches as b on a.id=b.id
+group by a.batsman
+having count(distinct(extract(year from b.date)))>2 and
+sum(a.batsman_runs)>400 -- again to give the data more credibility
+order by boundary_percentage desc
+limit 10;
